@@ -2,7 +2,7 @@ import unittest
 import os
 
 from basic_defs import cloud_storage
-from cloud import AWS_S3
+from cloud import AWS_S3, Azure_Blob_Storage, Google_Cloud_Storage
 from hexdump import hexdump
 
 class test_cloud_storage(object):
@@ -58,9 +58,9 @@ class test_AWS_S3(unittest.TestCase, test_cloud_storage):
     def setUp(self):
         test_cloud_storage.__init__(self, AWS_S3())
 
-class test_Azure_Blob(unittest.TestCase, test_cloud_storage):
+class test_Azure_Blob_Storage(unittest.TestCase, test_cloud_storage):
     def setUp(self):
-        test_cloud_storage.__init__(self, Azure_Blob())
+        test_cloud_storage.__init__(self, Azure_Blob_Storage())
 
 class test_Google_Cloud_Storage(unittest.TestCase, test_cloud_storage):
     def setUp(self):
