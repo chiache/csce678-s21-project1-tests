@@ -9,7 +9,7 @@ class test_cloud_storage(object):
     def __init__(self, cloud_storage):
         self.cloud_storage = cloud_storage
 
-    def test_read_write_block(self):
+    def test_1_read_write_block(self):
         block1 = bytearray(os.urandom(cloud_storage.block_size))
         self.cloud_storage.write_block(block1, 0)
         self.cloud_storage.write_block(block1, cloud_storage.block_size)
@@ -17,14 +17,10 @@ class test_cloud_storage(object):
         block3 = self.cloud_storage.read_block(cloud_storage.block_size)
         self.assertTrue(isinstance(block2, bytearray))
         self.assertTrue(isinstance(block3, bytearray))
-        self.assertEqual(len(block1), len(block2))
-        self.assertEqual(len(block1), len(block3))
-        for i in range(len(block1)):
-            self.assertEqual(block1[i], block2[i])
-            self.assertEqual(block1[i], block3[i])
+        self.assertEqual(block1, block2)
+        self.assertEqual(block1, block3)
 
-
-    def test_list_blocks(self):
+    def test_2_list_blocks(self):
         # List all the old blocks
         old_blocks = self.cloud_storage.list_blocks()
         # Find a new block to add
@@ -39,7 +35,7 @@ class test_cloud_storage(object):
         self.assertTrue(new_offset not in old_blocks)
         self.assertTrue(new_offset in new_blocks)
 
-    def test_delete_block(self):
+    def test_3_delete_block(self):
         block1 = bytearray(os.urandom(cloud_storage.block_size))
         self.cloud_storage.write_block(block1, 0)
         self.cloud_storage.write_block(block1, cloud_storage.block_size)
@@ -54,15 +50,15 @@ class test_cloud_storage(object):
         self.assertFalse(0 in blocks)
         self.assertFalse(cloud_storage.block_size in blocks)
 
-class test_AWS_S3(unittest.TestCase, test_cloud_storage):
+class test_1_AWS_S3(unittest.TestCase, test_cloud_storage):
     def setUp(self):
         test_cloud_storage.__init__(self, AWS_S3())
 
-class test_Azure_Blob_Storage(unittest.TestCase, test_cloud_storage):
+class test_2_Azure_Blob_Storage(unittest.TestCase, test_cloud_storage):
     def setUp(self):
         test_cloud_storage.__init__(self, Azure_Blob_Storage())
 
-class test_Google_Cloud_Storage(unittest.TestCase, test_cloud_storage):
+class test_3_Google_Cloud_Storage(unittest.TestCase, test_cloud_storage):
     def setUp(self):
         test_cloud_storage.__init__(self, Google_Cloud_Storage())
 
