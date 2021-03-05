@@ -1,5 +1,6 @@
 import unittest
 import os
+from gradescope_utils.autograder_utils.decorators import weight, visibility, number
 
 from basic_defs import cloud_storage
 from cloud import AWS_S3, Azure_Blob_Storage, Google_Cloud_Storage
@@ -9,6 +10,8 @@ class test_cloud_storage(object):
     def __init__(self, cloud_storage):
         self.cloud_storage = cloud_storage
 
+    @weight(1)
+    @number("1.1")
     def test_1_read_write_block(self):
         block1 = bytearray(os.urandom(cloud_storage.block_size))
         self.cloud_storage.write_block(block1, 0)
@@ -20,6 +23,8 @@ class test_cloud_storage(object):
         self.assertEqual(block1, block2)
         self.assertEqual(block1, block3)
 
+    @weight(1)
+    @number("1.2")
     def test_2_list_blocks(self):
         # List all the old blocks
         old_blocks = self.cloud_storage.list_blocks()
@@ -35,6 +40,8 @@ class test_cloud_storage(object):
         self.assertTrue(new_offset not in old_blocks)
         self.assertTrue(new_offset in new_blocks)
 
+    @weight(1)
+    @number("1.3")
     def test_3_delete_block(self):
         block1 = bytearray(os.urandom(cloud_storage.block_size))
         self.cloud_storage.write_block(block1, 0)

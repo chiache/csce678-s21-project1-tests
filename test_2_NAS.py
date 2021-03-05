@@ -2,6 +2,7 @@ import unittest
 import os
 import random
 import string
+from gradescope_utils.autograder_utils.decorators import weight, visibility, number
 
 from cloud import RAID_on_Cloud
 
@@ -9,6 +10,8 @@ class test_1_RAID_on_Cloud(unittest.TestCase):
     def setUp(self):
         self.NAS = RAID_on_Cloud()
 
+    @weight(1)
+    @number("2.1.1")
     def test_1_1_open_write_read_small(self, test_size=10):
         filename = ''.join(random.choice(string.ascii_letters) for i in range(32))
         data1 = ''.join(random.choice(string.ascii_letters) for i in range(test_size))
@@ -21,12 +24,18 @@ class test_1_RAID_on_Cloud(unittest.TestCase):
         data3 = self.NAS.read(fd, test_size, 0).decode('utf-8')
         self.assertEqual(data1, data3)
 
+    @weight(1)
+    @number("2.1.2")
     def test_1_2_open_write_read_middle(self):
         self.test_1_1_open_write_read_small(1000)
 
+    @weight(1)
+    @number("2.1.3")
     def test_1_3_open_write_read_large(self):
         self.test_1_1_open_write_read_small(10000)
 
+    @weight(1)
+    @number("2.2.1")
     def test_2_1_overwrite_small(self, test_size=10):
         filename = ''.join(random.choice(string.ascii_letters) for i in range(32))
         data1 = ''.join(random.choice(string.ascii_letters) for i in range(test_size))
@@ -41,12 +50,18 @@ class test_1_RAID_on_Cloud(unittest.TestCase):
         data3 = self.NAS.read(fd, test_size, 0).decode('utf-8')
         self.assertEqual(data2, data3)
 
+    @weight(1)
+    @number("2.2.2")
     def test_2_2_overwrite_middle(self):
         self.test_2_1_overwrite_small(1000)
 
+    @weight(1)
+    @number("2.2.3")
     def test_2_3_overwrite_large(self):
         self.test_2_1_overwrite_small(10000)
 
+    @weight(1)
+    @number("2.3.1")
     def test_3_1_overlapped_write_small(self, test_size=10):
         filename = ''.join(random.choice(string.ascii_letters) for i in range(32))
         data1 = ''.join(random.choice(string.ascii_letters) for i in range(test_size))
@@ -63,12 +78,18 @@ class test_1_RAID_on_Cloud(unittest.TestCase):
         self.assertEqual(data1[:test_size / 2], data3)
         self.assertEqual(data2, data4)
 
+    @weight(1)
+    @number("2.3.2")
     def test_3_2_overlapped_write_middle(self):
         self.test_3_1_overlapped_write_small(1000)
 
+    @weight(1)
+    @number("2.3.3")
     def test_3_3_overlapped_write_large(self):
         self.test_3_1_overlapped_write_small(10000)
 
+    @weight(3)
+    @number("2.4")
     def test_4_multiple_write_read(self, test_size=100):
         filename1 = ''.join(random.choice(string.ascii_letters) for i in range(32))
         filename2 = ''.join(random.choice(string.ascii_letters) for i in range(32))
@@ -89,6 +110,8 @@ class test_1_RAID_on_Cloud(unittest.TestCase):
         self.assertEqual(data1, data4)
         self.assertEqual(data2, data3)
 
+    @weight(3)
+    @number("2.5")
     def test_5_delete(self, test_size=100):
         filename = ''.join(random.choice(string.ascii_letters) for i in range(32))
         data1 = ''.join(random.choice(string.ascii_letters) for i in range(test_size))
